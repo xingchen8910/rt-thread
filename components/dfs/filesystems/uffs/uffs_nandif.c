@@ -135,7 +135,7 @@ const uffs_FlashOps nand_ops =
     nand_read_page,     /* ReadPage() */
     NULL,               /* ReadPageWithLayout */
     nand_write_page,    /* WritePage() */
-    NULL,               /* WirtePageWithLayout */
+    NULL,               /* WritePageWithLayout */
 #if defined(RT_UFFS_USE_CHECK_MARK_FUNCITON)
     nand_check_block,
     nand_mark_badblock,
@@ -302,7 +302,7 @@ const uffs_FlashOps nand_ops =
     NULL,               /* ReadPage() */
     ReadPageWithLayout, /* ReadPageWithLayout */
     NULL,               /* WritePage() */
-    WritePageWithLayout,/* WirtePageWithLayout */
+    WritePageWithLayout,/* WritePageWithLayout */
 
 #if defined(RT_UFFS_USE_CHECK_MARK_FUNCITON)
     nand_check_block,
@@ -324,7 +324,7 @@ static rt_uint8_t hw_flash_ecc_layout[UFFS_SPARE_LAYOUT_SIZE] =
     0x00, 0x04, 0xFF, 0x00
 };
 
-void uffs_setup_storage(struct uffs_StorageAttrSt *attr,
+RT_WEAK void uffs_setup_storage(struct uffs_StorageAttrSt *attr,
                         struct rt_mtd_nand_device *nand)
 {
     rt_memset(attr, 0, sizeof(struct uffs_StorageAttrSt));

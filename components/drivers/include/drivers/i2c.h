@@ -23,6 +23,7 @@ extern "C" {
 #define RT_I2C_NO_START         (1u << 4)
 #define RT_I2C_IGNORE_NACK      (1u << 5)
 #define RT_I2C_NO_READ_ACK      (1u << 6)  /* when I2C reading, we do not ACK */
+#define RT_I2C_NO_STOP          (1u << 7)
 
 struct rt_i2c_msg
 {
@@ -67,12 +68,6 @@ struct rt_i2c_client
     rt_uint16_t                    client_addr;
 };
 
-#ifdef RT_I2C_DEBUG
-#define i2c_dbg(fmt, ...)   rt_kprintf(fmt, ##__VA_ARGS__)
-#else
-#define i2c_dbg(fmt, ...)
-#endif
-
 rt_err_t rt_i2c_bus_device_register(struct rt_i2c_bus_device *bus,
                                     const char               *bus_name);
 struct rt_i2c_bus_device *rt_i2c_bus_device_find(const char *bus_name);
@@ -89,6 +84,17 @@ rt_size_t rt_i2c_master_recv(struct rt_i2c_bus_device *bus,
                              rt_uint16_t               flags,
                              rt_uint8_t               *buf,
                              rt_uint32_t               count);
+
+rt_inline rt_err_t rt_i2c_bus_lock(struct rt_i2c_bus_device *bus, rt_tick_t timeout)
+{
+    return rt_mutex_take(&bus->lock, timeout);
+}
+
+rt_inline rt_err_t rt_i2c_bus_unlock(struct rt_i2c_bus_device *bus)
+{
+    return rt_mutex_release(&bus->lock);
+}
+
 int rt_i2c_core_init(void);
 
 #ifdef __cplusplus
